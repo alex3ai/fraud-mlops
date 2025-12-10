@@ -1,0 +1,17 @@
+# Data Science & ML
+pandas==2.2.0
+numpy==1.26.3
+scikit-learn==1.4.0
+xgboost==2.0.3
+onnx>=1.16.0
+onnxruntime==1.17.0
+skl2onnx==1.16.0
+
+# API & Server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+gunicorn==21.2.0
+pydantic==2.5.3
+
+# Test Tools
+requests==2.31.0
