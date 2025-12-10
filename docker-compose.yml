@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # O Cérebro (API)
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    image: fraud-api:latest
+    volumes:
+      - ./models:/app/models:ro  # Monta a pasta de modelos (Read-Only)
+    environment:
+      - MODEL_PATH=models/fraud_model_quant.onnx
+    deploy:
+      resources:
+        limits:
+          cpus: '3.0'     # Simulando limite de produção
+          memory: 2G
+    healthcheck:
+      # SRE FIX: Usamos Python nativo em vez de curl para manter a imagem leve
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # O Escudo (Nginx)
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "8080:80"        # Porta Exposta para o Mundo (Localhost:8080)
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    # Ulimits aumentados para aguentar alta carga (5k TPS)
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+
+# Rede otimizada
+networks:
+  default:
+    driver: bridge
