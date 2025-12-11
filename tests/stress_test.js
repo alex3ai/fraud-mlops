@@ -10,10 +10,10 @@ export const options = {
       preAllocatedVUs: 50,
       maxVUs: 1000,
       stages: [
-        { target: 200, duration: '30s' },  // Aquecimento (Zona segura)
-        { target: 400, duration: '1m' },   // Zona de Risco (Provável gargalo)
-        { target: 600, duration: '1m' },   // Zona de Quebra (Saturação esperada)
-        { target: 0, duration: '30s' },    // Resfriamento
+        { target: 500, duration: '30s' },  // Aquecimento já começa alto
+        { target: 1000, duration: '1m' },  // Meta agressiva
+        { target: 2000, duration: '1m' },  // GOD MODE
+        { target: 0, duration: '30s' },
       ],
     },
   },
