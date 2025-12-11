@@ -7,6 +7,8 @@ services:
       context: .
       dockerfile: api/Dockerfile
     image: fraud-api:latest
+    # SRE FIX: Reduzimos para 2 workers para caber em 1.5 CPUs e aumentamos timeout
+    command: ["gunicorn", "app:app", "--workers", "2", "--worker-class", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000", "--timeout", "30", "--keep-alive", "5"]
     volumes:
       - ./models:/app/models:ro  # Monta a pasta de modelos (Read-Only)
     environment:
@@ -14,7 +16,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '3.0'     # Simulando limite de produção
+          cpus: '1.5'     # Simulando limite de produção
           memory: 2G
     healthcheck:
       # SRE FIX: Usamos Python nativo em vez de curl para manter a imagem leve
